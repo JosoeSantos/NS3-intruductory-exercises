@@ -70,11 +70,11 @@
 % ==============================
 \section{Introdução}
 
-NS3 é um simulador de rede discreto, amplamente utilizado para pesquisa e desenvolvimento em redes de computadores. Ele oferece uma plataforma flexível para modelar, simular e analisar o comportamento de redes complexas, permitindo que pesquisadores e engenheiros testem novas ideias e protocolos antes de implementá-los em ambientes reais.
+NS3 é um simulador de rede discreto, amplamente utilizado para pesquisa e desenvolvimento em redes de computadores. Ele oferece uma plataforma flexível para modelar, simular e analisar o comportamento de redes complexas, auxiliando a simulação de novas ideias e de novas soluções de rede feitas por pesquisadores e engenheiros.
 
-Este relatório descreve a implementação de topologias básicas utilizando o NS3, incluindo a configuração de nós, enlaces e protocolos de comunicação. Com o objetivo de fornecer uma compreensão prática do funcionamento do NS3 e de redes de  computadores. O procedimento deste relatório segue as etapas de instalação, configuração e execução de simulações sugeridas pelo tutorial oficial do NS3 \cite{ns3_tutorial}.
+Este relatório descreve a implementação de topologias básicas utilizando o NS3, incluindo a configuração de nós, enlaces e protocolos de comunicação. Com o objetivo de fornecer uma compreensão prática do funcionamento do NS3 e de redes de  computadores. O procedimento deste relatório segue as etapas de instalação, configuração e execução de simulações sugeridas pelo tutorial oficial do NS3 \cite{ns3_tutorial}. Além disso o código fonte escrito, os resultados de simulação e a fonte deste artigo em latex estão disponíveis no repositório GitHub \cite{tp1_repo}.
 
-\section{Simulações}
+\section{Ambiente de simulação}
 
 Este relatório descreve a implementação de topologias básicas utilizando o NS3. Os experimentos foram conduzidos em um ambiente MacOS com um processador Apple M4 pro, 16GB de RAM. O NS3 foi instalado e configurado conforme as instruções oficiais disponíveis na documentação do NS3. A figura \ref{fig:ns3_setup} ilustra a configuração do ambiente de simulação. Note que a configuração foi feita com sucesso porque a IDE reconheceu as classes do NS3 e não acusou erro no código fonte.
 
@@ -98,22 +98,14 @@ A figura \ref{fig:ns3_test} mostra o resultado da execução dos testes que veri
 
 \subsection{Topologia em estrela}
 
-A primeira topologia implementada foi a topologia em estrela, onde um nó central se conecta a vários nós periféricos. A figura \ref{fig:star_topology} ilustra a configuração dessa topologia. Nesta configuração o centro da estrela é um servidor com endereço IP 10.1.1.1 que se conecta aos clientes em outras subredes.
+A primeira topologia implementada foi a topologia em estrela, onde um nó central se conecta a vários nós periféricos. A figura \ref{fig:star_topology_layout} ilustra a configuração dessa topologia. Nesta configuração o centro da estrela é um servidor com endereço IP 10.1.1.1 que se conecta aos clientes em outras subredes.
 
-\begin{verbatim}
-  
-//
-// 10.1.2.0 10.1.1.0
-// n2 -------------- n0 -------------- n1
-// point-to-point point-to-point
-//                   |
-//                 p |
-//                 2 | 10.1.3.0
-//                 p |
-//                   |
-//                   n3
-
-\end{verbatim}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{star_topology.png}
+    \caption{Topologia em estrela com 3 clientes e 1 servidor.}
+    \label{fig:star_topology_layout}
+\end{figure}
 
 
 \begin{figure}[H]
@@ -125,7 +117,7 @@ A primeira topologia implementada foi a topologia em estrela, onde um nó centra
 
 \subsection{Redes ethernet}
 
-A segunda parte do trabalho envolveu a criação de uma rede Ethernet simples usando a tecnologia CSMA. A figura \ref{fig:ethernet_topology} mostra a configuração da rede Ethernet, onde vários nós estão conectados a um canal CSMA. Além disto nesta configuração, foram adicionados nós ponto a ponto nas extremidades da rede CSMA para simular a comunicação entre diferentes segmentos de rede.
+A segunda parte do trabalho envolveu a criação de uma rede Ethernet simples usando a tecnologia CSMA. A figura \ref{fig:ethernet_topology} mostra a configuração da rede Ethernet, onde vários nós estão conectados a um canal CSMA. Além disto nesta configuração, cada extremidade da rede CSMA é conectada ponto a ponto com um nó. Nesta configuração o cliente UDP é instalado no nó ponto a ponto mais a esquerda na rede 10.1.1.0/24 e o servidor UDP é instalado no nó ponto a ponto mais a direita na rede 10.1.3.0/24.
 
 \begin{figure}
     \centering
@@ -154,7 +146,7 @@ Contudo, o envio e confirmação de recebimento do primeiro pacote UDP demorou m
 
 \subsection{Redes sem fio}
 
-A terceira parte do trabalho envolveu a criação de uma rede sem fio utilizando o NS3. A figura \ref{fig:wireless_topology} ilustra a configuração da rede sem fio, onde vários nós estão conectados a um ponto de acesso (AP) que liga a outro nó ponto a ponto que também é um AP para outra rede com nWifi estações sem fio.
+A terceira parte do trabalho envolveu a criação de uma rede sem fio utilizando o NS3. A figura \ref{fig:wireless_topology} ilustra a configuração da rede sem fio, onde vários nós estão conectados a um ponto de acesso (AP) que liga a outro nó ponto a ponto que também é um AP para outra rede com nWifi estações sem fio. No exemplo da ilustração um cliente UDP é instalado no nó sem fio mais a esquerda na rede 10.1.3.0/24, e o servidor UDP é instalado no nó sem fio mais a direita na rede 10.1.2.0/24.
 
 \begin{figure}
   \centering
@@ -163,7 +155,7 @@ A terceira parte do trabalho envolveu a criação de uma rede sem fio utilizando
   \label{fig:wireless_topology}
 \end{figure}
 
-A implementação foi baseada no terceiro exemplo \texttt{third.cc} fornecido pelo NS3. Após a modificação do código, a simulação foi executada com sucesso, conforme ilustrado na figura \ref{fig:wireless_simulation}. A saída do terminal mostra que os pacotes foram enviados e recebidos corretamente, indicando que a rede sem fio está funcionando conforme o esperado. Além disso, nota-se que os tempos de transmissão e recepção dos pacotes são aleatórios. Isso pode ser consequência do tempo de transmissão variar devido a fatores como interferência, distância do ponto de acesso e condições do canal sem fio. O que também explica a ausência de uma configuração da largura de banda dos canais sem fio, uma vez que ela deve ser adaptativa as condições do ambiente.
+A implementação foi baseada no terceiro exemplo \texttt{third.cc} fornecido pelo NS3 \cite{ns3_tutorial}. Após a modificação do código, a simulação foi executada com sucesso, conforme ilustrado na figura \ref{fig:wireless_simulation}. A saída do terminal mostra que os pacotes foram enviados e recebidos corretamente, indicando que a rede sem fio está funcionando conforme o esperado. Além disso, nota-se que os tempos de transmissão e recepção dos pacotes são aleatórios. Isso pode ser consequência do tempo de transmissão variar devido a fatores como interferência, distância do ponto de acesso e condições do canal sem fio. O que também explica a ausência de uma configuração da largura de banda dos canais sem fio, uma vez que ela deve ser adaptativa as condições do ambiente.
 
 \begin{figure}
   \centering
